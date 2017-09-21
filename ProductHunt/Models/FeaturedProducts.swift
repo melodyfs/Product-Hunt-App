@@ -10,5 +10,9 @@ import Foundation
 
 struct FeaturedProducts {
     
+    var name: String
+    var tagline: String
+    var votes: Int
+    var thumbnail: URL
     
 }
