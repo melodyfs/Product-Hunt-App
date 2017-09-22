@@ -9,10 +9,14 @@
 import UIKit
 
 class HomeVC: UIViewController {
+    
+    private let networking = Networking()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        getFeaturedProducts(url: url) { (response) in
+        
+       // networking.delegate = self
+        Networking.shared.getFeaturedProducts(url: Networking.shared.url) { (response) in
             print(response)
         }
     }
@@ -25,6 +29,12 @@ class HomeVC: UIViewController {
 
 }
 
+//extension HomeVC: NetworkingDelegate {
+//
+//    func didRecieveDataUpdate(data: String) {
+//        print(data)
+//    }
+//}
 
 
 
