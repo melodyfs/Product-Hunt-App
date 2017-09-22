@@ -14,6 +14,8 @@
 		6C0298A71F737C2400E2A979 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0298A61F737C2400E2A979 /* Networking.swift */; };
 		6C0298A91F737C2600E2A979 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0298A81F737C2600E2A979 /* HomeVC.swift */; };
 		6C0298AF1F737C7B00E2A979 /* FeaturedProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0298AE1F737C7B00E2A979 /* FeaturedProducts.swift */; };
+		6CEBABC61F74A96D0099ECFA /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CEBABC51F74A96D0099ECFA /* HomeTableViewCell.swift */; };
+		6CEBABC81F74C7840099ECFA /* Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CEBABC71F74C7840099ECFA /* Comments.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		6C0298A61F737C2400E2A979 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		6C0298A81F737C2600E2A979 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		6C0298AE1F737C7B00E2A979 /* FeaturedProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedProducts.swift; sourceTree = "<group>"; };
+		6CEBABC51F74A96D0099ECFA /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
+		6CEBABC71F74C7840099ECFA /* Comments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comments.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				6C0298AE1F737C7B00E2A979 /* FeaturedProducts.swift */,
+				6CEBABC71F74C7840099ECFA /* Comments.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -98,6 +103,7 @@
 		6C0298AD1F737C5300E2A979 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6CEBABC51F74A96D0099ECFA /* HomeTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -175,7 +181,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				6C0298A91F737C2600E2A979 /* HomeVC.swift in Sources */,
+				6CEBABC61F74A96D0099ECFA /* HomeTableViewCell.swift in Sources */,
 				6C0298AF1F737C7B00E2A979 /* FeaturedProducts.swift in Sources */,
+				6CEBABC81F74C7840099ECFA /* Comments.swift in Sources */,
 				6C02988B1F7325C200E2A979 /* AppDelegate.swift in Sources */,
 				6C0298A71F737C2400E2A979 /* Networking.swift in Sources */,
 			);
