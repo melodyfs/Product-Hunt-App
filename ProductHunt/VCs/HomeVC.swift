@@ -12,7 +12,9 @@ class HomeVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        getFeaturedProducts(url: url) { (response) in
+            print(response)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -22,4 +24,14 @@ class HomeVC: UIViewController {
 
 
 }
+
+
+
+
+    
+    
+
+
+
+
 
