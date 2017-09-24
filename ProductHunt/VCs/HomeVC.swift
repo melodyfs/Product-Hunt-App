@@ -74,6 +74,7 @@ extension HomeVC: UITableViewDelegate {
         let product = products[indexPath.row]
         let postID = product.id
         
+        //getting corresponding comments of the product
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let commentVC = storyboard.instantiateViewController(withIdentifier: "commentVC") as! CommentVC
         commentVC.postID = postID
