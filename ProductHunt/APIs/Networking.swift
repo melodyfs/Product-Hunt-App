@@ -8,10 +8,6 @@
 
 import Foundation
 
-protocol NetworkingDelegate: class {
-    func didRecieveDataUpdate(data: Data)
-}
-
 //var session = URLSession.shared
 
 let session = URLSession.shared
@@ -23,7 +19,6 @@ let comments = "v1/comments"
 
 class Networking {
     
-    weak var delegate: NetworkingDelegate?
     
     static var shared = Networking()
     
@@ -55,12 +50,9 @@ class Networking {
         
     }
     
-    func getComments(id: Double, completion: @escaping ([Comments]) -> Void) {
+    func getComments(id: Int, completion: @escaping ([Comments]) -> Void) {
         
-        let product = [FeaturedProducts]
-        let id = String(product)
-        
-        let urlParam = ["search[post_id]": id]
+        let urlParam = ["search[post_id]": String(id)]
         let finalURL = commentURL.appendingQueryParameters(urlParam)
     
         
