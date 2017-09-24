@@ -15,11 +15,7 @@ class HomeVC: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     
-    var products: [FeaturedProducts] = [] {
-        didSet {
-            self.tableView.reloadData()
-        }
-    }
+    var products: [FeaturedProducts] = []
     
 
     override func viewDidLoad() {
@@ -31,7 +27,7 @@ class HomeVC: UIViewController {
         tableView.dataSource = self
         
         
-        Networking.shared.getFeaturedProducts(url: Networking.shared.url) { (response) in
+        Networking.getFeaturedProducts(url: Networking.shared.url) { (response) in
             print(response)
             self.products = response
             DispatchQueue.main.async {
@@ -39,10 +35,6 @@ class HomeVC: UIViewController {
             }
         }
         
-        Networking.shared.getComments(id: Double(products.index(before: 3))) { (response) in
-            print(response)
-            
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,16 +46,13 @@ class HomeVC: UIViewController {
 
 extension HomeVC: UITableViewDataSource {
     
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 5
-//    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return products.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "homeTableViewCell") as! HomeTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "homeTableViewCell", for: indexPath) as! HomeTableViewCell
         let product = products[indexPath.row]
         
         cell.nameLabel.text = product.name
@@ -80,6 +69,17 @@ extension HomeVC: UITableViewDataSource {
 }
 
 extension HomeVC: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let product = products[indexPath.row]
+        let postID = product.id
+        
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let commentVC = storyboard.instantiateViewController(withIdentifier: "commentVC") as! CommentVC
+        commentVC.postID = postID
+        navigationController?.pushViewController(commentVC, animated: true)
+        
+    }
     
 }
 

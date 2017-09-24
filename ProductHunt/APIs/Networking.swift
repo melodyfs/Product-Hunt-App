@@ -23,9 +23,9 @@ class Networking {
     static var shared = Networking()
     
     let url = URL(string:"\(baseURL)\(post)")!
-    let commentURL = URL(string: "\(baseURL)\(comments)")!
     
-    func getFeaturedProducts(url: URL, completion: @escaping ([FeaturedProducts]) -> Void ) {
+    
+    static func getFeaturedProducts(url: URL, completion: @escaping ([FeaturedProducts]) -> Void ) {
         
         var request = URLRequest(url: url)
         request.addValue("Bearer 6b0322696a6344e8bfe6e753d3b21182d0ba30354ca013f9c67c1b603ced9675", forHTTPHeaderField: "Authorization")
@@ -50,38 +50,47 @@ class Networking {
         
     }
     
-    func getComments(id: Int, completion: @escaping ([Comments]) -> Void) {
+    static func getComments(id: Int, completion: @escaping ([Comments]) -> Void) {
         
-        let urlParam = ["search[post_id]": String(id)]
+        let commentURL = URL(string: "\(baseURL)\(comments)")!
+
+        let date = Date()
+
+        let urlParam = ["search[post_id]": String(id),
+                        "scope": "public",
+                        "created_at": String(describing: date),
+                        "per_page": "20"]
         let finalURL = commentURL.appendingQueryParameters(urlParam)
-    
-        
+
+
         var request = URLRequest(url: finalURL)
         request.addValue("Bearer 6b0322696a6344e8bfe6e753d3b21182d0ba30354ca013f9c67c1b603ced9675", forHTTPHeaderField: "Authorization")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("api.producthunt.com", forHTTPHeaderField: "Host")
-        
+
         request.httpMethod = "GET"
-        
+
         session.dataTask(with: request) { (data, response, error) in
+         guard error == nil else { return }
+            
             if let data = data {
                 print(data)
-                
+
                 let commentList = try? JSONDecoder().decode(CommentList.self, from: data)
                 guard let comments = commentList?.comments else { return }
-                
+
                 completion(comments)
-                
+
             }
-            
+
         }.resume()
-        
-        
+
+
     }
+
     
-    
-    
+ 
     
 }
 
