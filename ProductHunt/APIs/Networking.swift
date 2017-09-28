@@ -16,6 +16,41 @@ let baseURL = "https://api.producthunt.com/"
 let post = "v1/me/feed"
 let comments = "v1/comments"
 
+enum Route {
+    case post
+    case comment(id: String)
+    
+    func path() -> String {
+        switch self {
+        case .post:
+            return "v1/me/feed"
+        case .comment:
+            return "v1/comments"
+        }
+    }
+    
+    func header() -> [String: String] {
+        let headers = ["Authorization": "Bearer 6b0322696a6344e8bfe6e753d3b21182d0ba30354ca013f9c67c1b603ced9675",
+                       "Accept": "application/json",
+                       "Content-Type": "application/json",
+                       "Host": "api.producthunt.com"]
+        return headers
+    }
+    func urlParams() -> [String: String] {
+        switch self {
+        case .post:
+            return [:]
+        case let .comment(id):
+            let urlParam = ["search[post_id]": "\(id)",
+                            "scope": "public",
+                            "per_page": "20"]
+            return urlParam
+        }
+       
+    }
+    
+}
+
 
 class Networking {
     
@@ -24,70 +59,88 @@ class Networking {
     
     let url = URL(string:"\(baseURL)\(post)")!
     
-    
-    static func getFeaturedProducts(url: URL, completion: @escaping ([FeaturedProducts]) -> Void ) {
+    func fetch(route: Route, model: Decodable, completion: @escaping (Data) -> Void) {
+        let fullURL = baseURL.appending(route.path())
+        var url = URL(string: fullURL)!
+        url = url.appendingQueryParameters(route.urlParams())
         
         var request = URLRequest(url: url)
-        request.addValue("Bearer 6b0322696a6344e8bfe6e753d3b21182d0ba30354ca013f9c67c1b603ced9675", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("api.producthunt.com", forHTTPHeaderField: "Host")
-        
-        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = route.header()
         
         session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                print(data)
-                
-                let productList = try? JSONDecoder().decode(ProductList.self, from: data)
-                guard let products = productList?.posts else { return }
-           
-                completion(products)
-                
-            }
+            guard let data = data else {return}
             
-        }.resume()
-        
+            let decodeModel = JSONDecoder()
+            let model = decodeModel.decode(type(of: model), from: data)
+            
+            completion(data)
+        }
     }
     
-    static func getComments(id: Int, completion: @escaping ([Comments]) -> Void) {
-        
-        let commentURL = URL(string: "\(baseURL)\(comments)")!
-
-        let date = Date()
-
-        let urlParam = ["search[post_id]": String(id),
-                        "scope": "public",
-                        "created_at": String(describing: date),
-                        "per_page": "20"]
-        let finalURL = commentURL.appendingQueryParameters(urlParam)
-
-
-        var request = URLRequest(url: finalURL)
-        request.addValue("Bearer 6b0322696a6344e8bfe6e753d3b21182d0ba30354ca013f9c67c1b603ced9675", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("api.producthunt.com", forHTTPHeaderField: "Host")
-
-        request.httpMethod = "GET"
-
-        session.dataTask(with: request) { (data, response, error) in
-         guard error == nil else { return }
-            
-            if let data = data {
-                print(data)
-
-                let commentList = try? JSONDecoder().decode(CommentList.self, from: data)
-                guard let comments = commentList?.comments else { return }
-
-                completion(comments)
-
-            }
-
-        }.resume()
-
-
-    }
+    
+//    func getFeaturedProducts(url: URL, completion: @escaping ([FeaturedProducts]) -> Void ) {
+//
+//        var request = URLRequest(url: url)
+//        request.addValue("Bearer 6b0322696a6344e8bfe6e753d3b21182d0ba30354ca013f9c67c1b603ced9675", forHTTPHeaderField: "Authorization")
+//        request.addValue("application/json", forHTTPHeaderField: "Accept")
+//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.addValue("api.producthunt.com", forHTTPHeaderField: "Host")
+//
+//        request.httpMethod = "GET"
+//
+//        session.dataTask(with: request) { (data, response, error) in
+//            if let data = data {
+//                print(data)
+//
+//                let productList = try? JSONDecoder().decode(ProductList.self, from: data)
+//                guard let products = productList?.posts else { return }
+//
+//                completion(products)
+//
+//            }
+//
+//        }.resume()
+//
+//    }
+    
+//    static func getComments(id: Int, completion: @escaping ([Comments]) -> Void) {
+//
+//        let commentURL = URL(string: "\(baseURL)\(comments)")!
+//
+//        let date = Date()
+//
+//        let urlParam = ["search[post_id]": String(id),
+//                        "scope": "public",
+//                        "created_at": String(describing: date),
+//                        "per_page": "20"]
+//        let finalURL = commentURL.appendingQueryParameters(urlParam)
+//
+//
+//        var request = URLRequest(url: finalURL)
+//        request.addValue("Bearer 6b0322696a6344e8bfe6e753d3b21182d0ba30354ca013f9c67c1b603ced9675", forHTTPHeaderField: "Authorization")
+//        request.addValue("application/json", forHTTPHeaderField: "Accept")
+//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.addValue("api.producthunt.com", forHTTPHeaderField: "Host")
+//
+//        request.httpMethod = "GET"
+//
+//        session.dataTask(with: request) { (data, response, error) in
+//         guard error == nil else { return }
+//
+//            if let data = data {
+//                print(data)
+//
+//                let commentList = try? JSONDecoder().decode(CommentList.self, from: data)
+//                guard let comments = commentList?.comments else { return }
+//
+//                completion(comments)
+//
+//            }
+//
+//        }.resume()
+//
+//
+//    }
 
     
  
