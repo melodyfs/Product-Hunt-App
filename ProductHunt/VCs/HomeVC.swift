@@ -16,6 +16,13 @@ class HomeVC: UIViewController {
     
     
     var products: [FeaturedProducts] = []
+    {
+        didSet{
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
     
 
     override func viewDidLoad() {
@@ -27,9 +34,12 @@ class HomeVC: UIViewController {
         tableView.dataSource = self
         
         
-        Networking.getFeaturedProducts(url: Networking.shared.url) { (response) in
-            print(response)
-            self.products = response
+        Networking.shared.fetch(route: .post) { (data) in
+            print(data)
+            
+            let productList = try? JSONDecoder().decode(ProductList.self, from: data)
+            guard let product = productList?.posts else { return }
+            self.products = product
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }

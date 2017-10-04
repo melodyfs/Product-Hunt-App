@@ -39,12 +39,15 @@ enum Route {
     func urlParams() -> [String: String] {
         switch self {
         case .post:
-            return [:]
+            let postParams = ["search[featured]": "true",
+                                  "scope": "public",
+                                  "per_page": "20"]
+            return postParams
         case let .comment(id):
-            let urlParam = ["search[post_id]": "\(id)",
+            let commentParams = ["search[post_id]": String(describing: id),
                             "scope": "public",
                             "per_page": "20"]
-            return urlParam
+            return commentParams
         }
        
     }
@@ -59,7 +62,7 @@ class Networking {
     
     let url = URL(string:"\(baseURL)\(post)")!
     
-    func fetch(route: Route, model: Decodable, completion: @escaping (Data) -> Void) {
+    func fetch(route: Route, completion: @escaping (Data) -> Void) {
         let fullURL = baseURL.appending(route.path())
         var url = URL(string: fullURL)!
         url = url.appendingQueryParameters(route.urlParams())
@@ -68,14 +71,18 @@ class Networking {
         request.allHTTPHeaderFields = route.header()
         
         session.dataTask(with: request) { (data, response, error) in
-            guard let data = data else {return}
-            
-            let decodeModel = JSONDecoder()
-            let model = decodeModel.decode(type(of: model), from: data)
-            
-            completion(data)
-        }
+            print("networking succeed")
+            //let decodeModel = JSONDecoder()
+            //let model = decodeModel.decode(type(of: model), from: data)
+            if let data = data {
+                completion(data)
+            }
+            else {
+                print(error?.localizedDescription ?? "Error")
+            }
+        }.resume()
     }
+}
     
     
 //    func getFeaturedProducts(url: URL, completion: @escaping ([FeaturedProducts]) -> Void ) {
@@ -145,7 +152,7 @@ class Networking {
     
  
     
-}
+
 
 protocol URLQueryParameterStringConvertible {
     var queryParameters: String {get}

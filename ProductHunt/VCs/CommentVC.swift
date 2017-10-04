@@ -22,9 +22,12 @@ class CommentVC: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        Networking.getComments(id: postID) { (response) in
+        Networking.shared.fetch(route: .comment(id: String(describing:postID))) { (response) in
             print(response)
-            self.comment = response
+            let commentList = try? JSONDecoder().decode(CommentList.self, from: response)
+            guard let comments = commentList?.comments else { return }
+            
+            self.comment = comments
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
