@@ -38,6 +38,7 @@ class HomeVC: UIViewController {
             print(data)
             
             let productList = try? JSONDecoder().decode(ProductList.self, from: data)
+            print(productList)
             guard let product = productList?.posts else { return }
             self.products = product
             DispatchQueue.main.async {
